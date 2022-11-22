@@ -1,0 +1,25 @@
+Execution
+---------
+The experiments have been designed with C++11. In order to execute the
+experiments, it is needed to compile it first. It has been tested with
+the GCC, the GNU Compiler Collection:
+    g++ assignment1.cpp -o assignment1 -O3
+
+Then to execute the darts' experiment:
+    ./assignment1 1
+It will ask using the standard input how many iterations are wanted to 
+run. Similarly, using the number 2 as the argument it will run the
+needles' experiment. It will generate two files: 'evolution.csv' and 
+'points.csv'. The first one will have which is the ratio in each
+iteration. The second file will have the point generated.
+
+Generating graphs
+-----------------
+To generate the graphs, there is a python notebook designed to be
+executed in a Google Colab environment. Firstly, the files generated
+by the program have to be compressed in a tar file with the command:
+    tar czf <experiment>.tar.gz evolution.csv points.csv
+Being <experiment> 'darts' or 'needles' deppending which variant of
+the experiment has been executed. Then, they have to be uploaded in 
+the root of the Google Drive. After uploading both tar files to Google
+Drive, the whole Python Notebook can be executed using Google Colab.
