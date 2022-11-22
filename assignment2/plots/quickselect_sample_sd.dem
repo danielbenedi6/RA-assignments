@@ -1,0 +1,8 @@
+#GNU PLOT
+set title "Standard deviation of QuickSelect with sample of 3 elements"
+set xlabel "N"
+set ylabel "alpha"
+set xrange [20000:1800000]
+set zrange [0.5:1.3]
+splot "data/quickselect_sample_sd.dat" u 1:2:3 title "Experimental"
+pause -1

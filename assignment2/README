@@ -1,0 +1,25 @@
+Execution
+---------
+The experiments have been designed with C++11. In order to execute the
+experiments, it is needed to compile it first. It has been tested with
+the GCC, the GNU Compiler Collection:
+    g++ assignment2.cpp -o assignment2 -O3 -fopenmp
+
+Then to execute the experiments:
+    ./assignment2
+
+Generating graphs
+-----------------
+To generate the graphs, firstly it is needed to preprocess the experiments
+output with the c++ code "process.cpp". It had to be compiled with the same
+compiler:
+	g++ process.cpp -o process -O3
+Then the executable must be located in the same place as the csv files. Then 
+it has to be executed with:
+	./process
+It will generate some ".dat" files that has to be moved to the subfolder 
+./plots/data After that, with the command "gnuplot <dem file>" every plot can
+be generated. For instance:
+	gnuplot quickselect_mean.dem
+It is important to notice that the working directory for this command havs to 
+be the folder plots

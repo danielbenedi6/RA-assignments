@@ -1,0 +1,10 @@
+#GNU PLOT
+set title "Normalized mean of comparisons in QuickSelect with sample of 3 elements"
+set xlabel "N"
+set ylabel "alpha"
+set zlabel "Comparisons"
+set zrange [1.5:4.0]
+set samples 100
+cost(x,y) = 2 - 2*(y * log(y) + (1-y)*log(1-y))
+splot "data/quickselect_sample_mean.dat" u 1:2:3 title "Experimental", cost(x,y) title "Theoretical"
+pause -1

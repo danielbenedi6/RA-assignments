@@ -1,0 +1,6 @@
+quick(x,y) = 2 - 2*(y*log(y) + (1 - y)*log(1 - y))
+randmed(x,a,b) = (a*x/log(x) * log(x/log(x))+b)/x
+set yrange[2.5:4.2]
+set title "Average (100 tries) for selecting the median (α = 0.5)"
+plot 'data/quickselect_median_mean.dat' title 'QuickSelect', 'data/randmedian_mean.dat' title 'Randomized median', quick(x,0.5) title 'Theoretical QuickSelect: 2-2(αln(α)+(1-α)ln(1-α))', randmed(x, 3.07670583e+00, 2.35590326e+05) title 'Fitted theoretical Randomized Median: O(n/log(n) * log(n/log(n)))'
+pause -1

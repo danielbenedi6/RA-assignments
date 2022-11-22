@@ -1,0 +1,5 @@
+set title "Standard deviation of QuickSelect (α = 0.5) and Randomized Median"
+set xlabel "Elements in the vector"
+set ylabel "Standard deviation"
+plot 'data/quickselect_median_sd.dat' title "QuickSelect", 'data/randmedian_sd.dat' title "Randomized median"
+pause -1
