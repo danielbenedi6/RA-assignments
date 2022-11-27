@@ -41,32 +41,12 @@ std::pair<double, double> sd_mean(std::vector<uint64_t> samples){
 	return std::make_pair(mean_curr, std::sqrt(s_curr/double(samples.size()-1)));
 }
 
-/*
-std::pair<double, double> sd_mean(std::vector<uint64_t> samples){
-	double N = static_cast<double>(samples.size());
-	double mean = 0.0;
-	for(uint64_t sample : samples){
-		double data = static_cast<double>(sample);
-		mean += data / N;
-	}
-	
-	double sd = 0.0;
-	for(uint64_t sample : samples){
-		double data = static_cast<double>(sample);
-		sd += (data - mean)*(data - mean)/(N-1.0);
-	}
-	sd = std::sqrt(sd);
-	
-	return std::make_pair(mean, sd);
-}
-*/
-
 void process_search_cost(){
 	std::ifstream f("total_search_cost.csv");
-	std::ofstream mean("search_cost_mean.dat");
-	std::ofstream sd("search_cost_sd.dat");
-	std::ofstream median_mean("search_cost_median_mean.dat");
-	std::ofstream median_sd("search_cost_median_sd.dat");
+	std::ofstream mean("plot/data/search_cost_mean.dat");
+	std::ofstream sd("plot/data/search_cost_sd.dat");
+	std::ofstream median_mean("plot/data/search_cost_median_mean.dat");
+	std::ofstream median_sd("plot/data/search_cost_median_sd.dat");
 
 	std::string line{};
 

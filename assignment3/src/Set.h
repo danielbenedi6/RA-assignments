@@ -56,30 +56,37 @@ class Set {
 		void insert(const T& x){
 			if(contains(x)) return;
 		
-			int height = randomLevel();
+			int height = randomHeight();
 			Node* new_elem = new Node(x, height);
-		
+			
 			// If it is the first element in that height, add it to the head
-			while(head.size() <= new_elem->height){
+			while(head.size() < new_elem->height){
 				head.push_back(new_elem);
 				height--;
 			}
-		
+			
 			// It might happen that it is the fisrt one added
 			if(height < 0) return;
-		
-		
-			Node* tmp = head[height];
+			
+			height--;
 			while(height >= 0){
-				//While for that level there is a smaller element and exist and following node, go forward
-				while(tmp->data < x && tmp->forward[height]) tmp = tmp->forward[height];
-		
-				new_elem->forward[height] = tmp->forward[height];
-				tmp->forward[height] = new_elem;
+				Node* tmp = head[height];
+				if(tmp->data > x) {
+					new_elem->forward[height] = tmp;
+					tmp->backward[height] = new_elem;
+					head[height] = new_elem;
+				}else{
+					//While for that level there is a smaller element and exist and following node, go forward
+					while(tmp->forward[height] && tmp->forward[height]->data < x)
+						tmp = tmp->forward[height];
 				
-				if(new_elem->forward[height]) //If there is a next element
-					// Set the backward pointer
-					new_elem->forward[height]->backward[height] = new_elem;
+					new_elem->backward[height] = tmp;
+					if(tmp->forward[height]) {
+						new_elem->forward[height] = tmp->forward[height];
+						tmp->forward[height]->backward[height] = new_elem;
+					}
+					tmp->forward[height] = new_elem;
+				}
 				height--;
 			}
 		}
@@ -177,6 +184,51 @@ class Set {
 		double get_q() const {
 			return q;
 		}
+
+		int nodes_lvl(int lvl) const {
+			if(lvl >= head.size()) return 0;
+
+			int nodes = 0;
+			Node* node = head[lvl];
+			while(node != nullptr){
+				nodes++;
+				node = node->forward[lvl];
+			}
+			
+			return nodes;
+		}
+
+		friend std::ostream& operator<< (std::ostream& stream, const Set& set) {
+			// Print HEAD
+			for(int i = 0; i < set.head.size(); i++) stream << "--- "; stream << std::endl;
+			for(int i = 0; i < set.head.size(); i++) stream << " Ø  "; stream << std::endl;
+			for(int i = 0; i < set.head.size(); i++) stream << "--- "; stream << std::endl;
+			
+			// Print BODY
+			Node* node = set.head[0];
+			while(node != nullptr){
+				for(int i = 0; i < set.head.size(); i++) stream << " |  "; stream << std::endl;
+				for(int i = 0; i < node->height; i++) stream << " v  ";
+				for(int i = node->height; i < set.head.size(); i++) stream << " |  "; stream << std::endl;
+				for(int i = 0; i < node->height; i++) stream << "--- ";
+				for(int i = node->height; i < set.head.size(); i++) stream << " |  "; stream << std::endl;
+				for(int i = 0; i < node->height; i++) stream << " " << node->data << "  ";
+				for(int i = node->height; i < set.head.size(); i++) stream << " |  "; stream << std::endl;
+				for(int i = 0; i < node->height; i++) stream << "--- ";
+				for(int i = node->height; i < set.head.size(); i++) stream << " |  "; stream << std::endl;
+
+				node = node->forward[0];
+			}
+
+			// Print END
+			for(int i = 0; i < set.head.size(); i++) stream << " |  "; stream << std::endl;
+			for(int i = 0; i < set.head.size(); i++) stream << " v  "; stream << std::endl;
+			for(int i = 0; i < set.head.size(); i++) stream << "--- "; stream << std::endl;
+			for(int i = 0; i < set.head.size(); i++) stream << " ∞  "; stream << std::endl;
+			for(int i = 0; i < set.head.size(); i++) stream << "--- "; stream << std::endl;
+
+			return stream;
+		}
 	private:
 		struct Node{
 			const T& data;
@@ -184,10 +236,10 @@ class Set {
 			Node** backward;
 			int height;
 			Node(const T& data, int height) : data(data), height(height) {
-				forward = new Node*[height+1];
-				backward = new Node*[height+1];
+				forward = new Node*[height];
+				backward = new Node*[height];
 			
-				for(int i = 0; i <= height; i++){
+				for(int i = 0; i < height; i++){
 					forward[i] = nullptr;
 					backward[i] = nullptr;
 				}
@@ -199,10 +251,10 @@ class Set {
 			}
 		};
 		
-		std::vector<Node*> head; // First element for every height
 
 		// data members
-		double q;
+		std::vector<Node*> head; // First element for every height
+		double q; // Probability of not having another level
 		
 		// Internal procedures
 		Node* search(const T& x) const{
@@ -222,14 +274,14 @@ class Set {
 			return res;
 		}
 
-		int randomLevel(){
+		int randomHeight(){
 		    static std::random_device rd;
 		    static std::mt19937 gen(rd());
 		    static std::uniform_real_distribution<> dis(0.0,1.0);
 			
-			int lvl = 0;
-			while(dis(gen) > q) lvl++;
+			int height = 1;
+			while(dis(gen) > q) height++;
 		
-			return lvl;
+			return height;
 		}
 }; 

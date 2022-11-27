@@ -16,11 +16,6 @@ CC = g++
 # vars
 EXEC = assignment3
 
-#PARSER = ParseInput
-#OPT = Optimizer
-#APPR = Approximation
-
-#LIBRARIES = ${PARSER}.hpp ${OPT}.hpp ${APPR}.hpp
 SRC_DIR = src
 BUILD_DIR = build
 TARGET = bin
@@ -33,7 +28,8 @@ GEN_DOCS = html
 
 #---------------------------------------------------------
 # flags
-CPPFLAGS= -std=gnu++17 -O3 -fopenmp #0 -g  -fsanitize=address
+CPPFLAGS= -std=gnu++17 -O3 -fopenmp
+#CPPFLAGS= -std=gnu++17 -O0 -g -fsanitize=address -DDEBUG
 
 all: $(EXEC)
 #---------------------------------------------------------
