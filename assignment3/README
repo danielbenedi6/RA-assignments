@@ -1,0 +1,33 @@
+Execution
+---------
+The experiments and data structure have been designed with C++11. In order to
+execute the experiments, it is needed to compile it first. It has been tested
+with the GCC, the GNU Compiler Collection. A Makefile is available to compile
+it with:
+    make
+
+Then to execute the experiments:
+    ./bin/assignment3
+
+Debugging
+---------
+The makefile has options to compile this executable in debug mode so the data
+structures can be observed in console with a pretty print and a small case.
+To do so, the line 31 must be commented, the line 32 must be uncommented and
+then the command must be executed:
+	make clean && make
+
+Generating graphs
+-----------------
+To generate the graphs, firstly it is needed to preprocess the experiments
+output with the c++ code "process.cpp". It had to be compiled with the same
+compiler:
+	make process
+Then the executable must be located in the same place as the csv files. Then 
+it has to be executed with:
+	./bin/process
+It will generate some ".dat" files in the subfolder ./plots/data that must 
+exist before executing it. After that, with the command
+	make plots
+will generate every plot in the report and some 3D plots that weren't included.
+

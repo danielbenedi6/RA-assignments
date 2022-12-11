@@ -1,0 +1,14 @@
+#GNU PLOT
+set title "Mean of SkipList total search cost with different q"
+set xlabel "N"
+set ylabel "Comparisons"
+set key left top
+Q(q) = 1/q
+L(q) = log(Q(q))
+gamma = 0.5772156649
+cost(x,q) = Q(q)*x*log(x)/log(Q(q)) + x * (Q(q)/L(q)*(gamma-1) + 1/L(q) - Q(q)/2)
+plot "<(grep '	0.2' data/search_cost_mean.dat)" u 1:3 title "Experimental q=0.2" pointtype 47, cost(x,0.2) title "Theoretical" lt -1, \
+	"<(grep '	0.4' data/search_cost_mean.dat)" u 1:3 title "Experimental q=0.4" pointtype 47, cost(x,0.4) title "Theoretical" lt -1, \
+	"<(grep '	0.6' data/search_cost_mean.dat)" u 1:3 title "Experimental q=0.6" pointtype 47, cost(x,0.6) title "Theoretical" lt -1, \
+	"<(grep '	0.8' data/search_cost_mean.dat)" u 1:3 title "Experimental q=0.8" pointtype 47, cost(x,0.8) title "Theoretical" lt -1
+pause -1

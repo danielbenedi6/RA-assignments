@@ -1,0 +1,8 @@
+#GNU PLOT
+set title "Mean memory usage of SkipList with p = 0.5"
+set xlabel "N"
+set ylabel "Pointers"
+q = 0.5
+cost(x) = x/(1-q) + log(x)/log(1/q)
+plot "data/memory_use_median_mean.dat" title "Experimental", cost(x) title 'Theoretical'
+pause -1

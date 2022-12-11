@@ -1,3 +1,10 @@
+//*************************************************
+// File:   Set.h
+// Author: Daniel Benedi Garcia
+// Date:   8th December 2022
+// Coms:   Set class that implements a skip list
+//         and a lot of associated utilities
+//*************************************************
 #pragma once
 #include <vector>
 
@@ -28,24 +35,6 @@ class Set {
 				elem = next;
 			}
 		}
-		
-		/**
-		 * Copies the given Set to a new one.
-		 *
-		 * @param S		Set. Set to be copied.
-		 */
-		Set(const Set& S) : q(q) {
-		}
-
-		/**
-		 * Assignment.
-		 * 
-		 * @param S		Set. Set to be copied.
-		 */
-		Set& operator=(const Set& S){
-			this.q = S.get_q();
-			return this;
-		}
 
 		/**
 		 * Insert element x in the set.
@@ -64,29 +53,32 @@ class Set {
 				head.push_back(new_elem);
 				height--;
 			}
+			height--;
 			
 			// It might happen that it is the fisrt one added
 			if(height < 0) return;
 			
-			height--;
+			Node* tmp = head[height];
+			while(height >= 0 && tmp->data > x){
+				new_elem->forward[height] = tmp;
+				tmp->backward[height] = new_elem;
+				head[height] = new_elem;
+				height--;
+				if(height >= 0)
+					tmp = head[height];
+			}
 			while(height >= 0){
-				Node* tmp = head[height];
-				if(tmp->data > x) {
-					new_elem->forward[height] = tmp;
-					tmp->backward[height] = new_elem;
-					head[height] = new_elem;
-				}else{
-					//While for that level there is a smaller element and exist and following node, go forward
-					while(tmp->forward[height] && tmp->forward[height]->data < x)
-						tmp = tmp->forward[height];
+				// While for that level there is a smaller element
+				// and exist and following node, go forward
+				while(tmp->forward[height] && tmp->forward[height]->data < x)
+					tmp = tmp->forward[height];
 				
-					new_elem->backward[height] = tmp;
-					if(tmp->forward[height]) {
-						new_elem->forward[height] = tmp->forward[height];
-						tmp->forward[height]->backward[height] = new_elem;
-					}
-					tmp->forward[height] = new_elem;
+				new_elem->backward[height] = tmp;
+				if(tmp->forward[height]) {
+					new_elem->forward[height] = tmp->forward[height];
+					tmp->forward[height]->backward[height] = new_elem;
 				}
+				tmp->forward[height] = new_elem;
 				height--;
 			}
 		}
@@ -101,7 +93,7 @@ class Set {
 			Node* elem = search(x);
 		
 			if(elem && elem->data == x){
-				for(size_t lvl = 0; lvl <= elem->height; lvl++){
+				for(int lvl = elem->height-1; lvl >= 0; lvl--){
 					if(elem->backward[lvl]){
 						elem->backward[lvl]->forward[lvl] = elem->forward[lvl];
 						if(elem->forward[lvl]){
@@ -200,32 +192,48 @@ class Set {
 
 		friend std::ostream& operator<< (std::ostream& stream, const Set& set) {
 			// Print HEAD
-			for(int i = 0; i < set.head.size(); i++) stream << "--- "; stream << std::endl;
-			for(int i = 0; i < set.head.size(); i++) stream << " Ø  "; stream << std::endl;
-			for(int i = 0; i < set.head.size(); i++) stream << "--- "; stream << std::endl;
-			
+			for(int i = 0; i < set.head.size(); i++)
+				stream << "--- "; stream << std::endl;
+			for(int i = 0; i < set.head.size(); i++)
+				stream << " Ø  "; stream << std::endl;
+			for(int i = 0; i < set.head.size(); i++)
+				stream << "--- "; stream << std::endl;
+
 			// Print BODY
 			Node* node = set.head[0];
 			while(node != nullptr){
-				for(int i = 0; i < set.head.size(); i++) stream << " |  "; stream << std::endl;
-				for(int i = 0; i < node->height; i++) stream << " v  ";
-				for(int i = node->height; i < set.head.size(); i++) stream << " |  "; stream << std::endl;
+				for(int i = 0; i < set.head.size(); i++)
+					stream << " |  "; stream << std::endl;
+				for(int i = 0; i < node->height; i++)
+					stream << " v  ";
+				for(int i = node->height; i < set.head.size(); i++)
+					stream << " |  "; stream << std::endl;
 				for(int i = 0; i < node->height; i++) stream << "--- ";
-				for(int i = node->height; i < set.head.size(); i++) stream << " |  "; stream << std::endl;
-				for(int i = 0; i < node->height; i++) stream << " " << node->data << "  ";
-				for(int i = node->height; i < set.head.size(); i++) stream << " |  "; stream << std::endl;
-				for(int i = 0; i < node->height; i++) stream << "--- ";
-				for(int i = node->height; i < set.head.size(); i++) stream << " |  "; stream << std::endl;
+				for(int i = node->height; i < set.head.size(); i++)
+					stream << " |  "; stream << std::endl;
+				for(int i = 0; i < node->height; i++)
+					stream << " " << node->data << "  ";
+				for(int i = node->height; i < set.head.size(); i++)
+					stream << " |  "; stream << std::endl;
+				for(int i = 0; i < node->height; i++)
+					stream << "--- ";
+				for(int i = node->height; i < set.head.size(); i++)
+					stream << " |  "; stream << std::endl;
 
 				node = node->forward[0];
 			}
 
 			// Print END
-			for(int i = 0; i < set.head.size(); i++) stream << " |  "; stream << std::endl;
-			for(int i = 0; i < set.head.size(); i++) stream << " v  "; stream << std::endl;
-			for(int i = 0; i < set.head.size(); i++) stream << "--- "; stream << std::endl;
-			for(int i = 0; i < set.head.size(); i++) stream << " ∞  "; stream << std::endl;
-			for(int i = 0; i < set.head.size(); i++) stream << "--- "; stream << std::endl;
+			for(int i = 0; i < set.head.size(); i++)
+				stream << " |  "; stream << std::endl;
+			for(int i = 0; i < set.head.size(); i++)
+				stream << " v  "; stream << std::endl;
+			for(int i = 0; i < set.head.size(); i++)
+				stream << "--- "; stream << std::endl;
+			for(int i = 0; i < set.head.size(); i++)
+				stream << " ∞  "; stream << std::endl;
+			for(int i = 0; i < set.head.size(); i++)
+				stream << "--- "; stream << std::endl;
 
 			return stream;
 		}

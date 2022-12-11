@@ -1,0 +1,7 @@
+#GNU PLOT
+set title "Standard deviation of SkipList memory usage"
+set xlabel "N"
+set ylabel "Probability"
+set zlabel "Comparisons"
+splot "data/search_cost_sd.dat" u 1:2:3 title "Experimental"
+pause -1

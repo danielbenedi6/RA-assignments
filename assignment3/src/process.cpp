@@ -88,7 +88,55 @@ void process_search_cost(){
 	}while(!f.eof());
 }
 
+void process_memory_use(){
+	std::ifstream f("total_memory_use.csv");
+	std::ofstream mean("plot/data/memory_use_mean.dat");
+	std::ofstream sd("plot/data/memory_use_sd.dat");
+	std::ofstream median_mean("plot/data/memory_use_median_mean.dat");
+	std::ofstream median_sd("plot/data/memory_use_median_sd.dat");
+
+	std::string line{};
+
+	const char delim = ',';
+
+	if(!f.good()){
+		std::cerr << "error: file open failed 'total_memory_use.csv'." << std::endl;
+		return;
+	}
+	
+
+	int N;
+	double alpha;
+	do{
+		std::vector<uint64_t> v{};
+		uint64_t tmp_int;
+		std::string tmp_string {};
+		getline(f,line);
+
+		std::stringstream ss(line);
+		ss >> N;
+        getline (ss, tmp_string, delim);  /* read delimiter */
+		ss >> alpha;
+        getline (ss, tmp_string, delim);  /* read delimiter */
+		while(ss >> tmp_int){
+			v.push_back(tmp_int);
+            getline (ss, tmp_string, delim);  /* read delimiter */
+		}
+
+		auto stats = sd_mean(v);
+		
+		mean << N << "\t" << alpha << "\t" << stats.first << std::endl;
+		sd << N << "\t" << alpha << "\t" << stats.second << std::endl;
+
+		if(std::abs(alpha - 0.5) < 0.005) {
+			median_mean << N << "\t" << stats.first << std::endl;
+			median_sd << N << "\t" << stats.second << std::endl;
+		}
+	}while(!f.eof());
+}
+
 int main(){
 	process_search_cost();
+	process_memory_use();
 }
 

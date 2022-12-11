@@ -1,0 +1,9 @@
+#GNU PLOT
+set title "Standard deviation of SkipList total search cost with q = 0.5"
+set xlabel "N"
+set ylabel "Comparisons"
+set key left top
+K(q) = q == 0.1? 10.57 : q == 0.2? 3.16 : q == 0.3? 2.15 : q == 0.4? 2.44 : q == 0.5 ? 3.66 : q == 0.6 ? 6.41 : q == 0.7 ? 12.96 : q == 0.8 ? 33.02 : 148.13
+SD(x,q) = sqrt(K(q)*x*x)
+plot "<(grep '	0.5' data/search_cost_sd.dat)" u 1:3 title "Experimental q=0.2" pointtype 47, SD(x,0.5) title "Theoretical approx" lt -1
+pause -1

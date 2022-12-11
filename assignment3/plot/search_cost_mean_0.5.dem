@@ -1,0 +1,13 @@
+#GNU PLOT
+set title "Mean of SkipList total search cost with p = 0.5"
+set xlabel "N"
+set ylabel "Comparisons"
+set key left top
+q = 0.5
+p = 1 - q
+Q = 1/q
+L = log(Q)
+gamma = 0.5772156649
+cost(x) = Q*x*log(x)/log(Q) + x * (Q/L*(gamma-1) + 1/L - Q/2)
+plot "data/search_cost_median_mean.dat" title "Experimental" pointtype 47, cost(x) title "Theoretical" lt -1
+pause -1

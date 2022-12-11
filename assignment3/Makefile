@@ -28,8 +28,8 @@ GEN_DOCS = html
 
 #---------------------------------------------------------
 # flags
-CPPFLAGS= -std=gnu++17 -O3 -fopenmp
-#CPPFLAGS= -std=gnu++17 -O0 -g -fsanitize=address -DDEBUG
+CPPFLAGS = -std=gnu++17 -O3 -fopenmp
+#CPPFLAGS = -std=gnu++17 -O0 -g -fsanitize=address -DDEBUG
 
 all: $(EXEC)
 #---------------------------------------------------------
@@ -41,11 +41,17 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
 	@mkdir -p $(BUILD_DIR)
 	$(CC) -c $(CPPFLAGS) $< -o $@
 #---------------------------------------------------------
-test: $(EXEC)
-	${PYTHON} testTSP.py
+process: ${SRC_DIR}/process.cpp
+	@mkdir -p ${TARGET}
+	${CC} $^ -o $(TARGET)/$@ ${CPPFLAGS}
+#---------------------------------------------------------
+.PHONY: docs, plots, clean
 #---------------------------------------------------------
 docs: $(EXEC)
 	${DOCS} ${DOCS_CONFIG}
+#---------------------------------------------------------
+plots:
+	cd plot; for plot in $$(ls *.dem); do gnuplot $$plot; done
 #---------------------------------------------------------
 clean:
 	$(RM) $(TARGET) $(BUILD_DIR) ${GEN_DOCS}
